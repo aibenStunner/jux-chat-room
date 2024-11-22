@@ -1,3 +1,12 @@
-export default function Home() {
-  return <div className="flex items-center justify-center">Jux Chat Room</div>;
+import { caller } from "@/server/routers/_app";
+
+export default async function Home() {
+  const healthCheck = await caller.healthCheck();
+
+  return (
+    <div className="flex flex-col items-center justify-center">
+      <p>Jux Chat Room</p>
+      <p>{healthCheck}</p>
+    </div>
+  );
 }

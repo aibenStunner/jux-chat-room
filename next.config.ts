@@ -1,7 +1,5 @@
-import type { NextConfig } from "next";
+import { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
-  /* config options here */
-};
-
-export default nextConfig;
+export default {
+  output: "standalone",
+} satisfies NextConfig;
