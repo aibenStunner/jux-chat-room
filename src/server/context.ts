@@ -1,10 +1,15 @@
 import type { FetchCreateContextFnOptions } from "@trpc/server/adapters/fetch";
+import { auth } from "./services/auth";
 
 export const createContext = async (opts: FetchCreateContextFnOptions) => {
-  console.log("createContext");
+  const session = await auth();
+
+  console.log(
+    `[INFO] context created for ${session?.user?.name ?? "unknown user"}`
+  );
 
   return {
-    context: "context",
+    session,
   };
 };
 

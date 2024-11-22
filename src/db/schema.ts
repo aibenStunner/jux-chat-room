@@ -7,5 +7,7 @@ export const usersTable = pgTable("users", {
     mode: "date",
     precision: 3,
     withTimezone: true,
-  }),
+  })
+    .notNull()
+    .defaultNow(),
 });

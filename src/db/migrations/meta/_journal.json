@@ -8,6 +8,20 @@
       "when": 1732302067533,
       "tag": "0000_curvy_lady_ursula",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1732309256430,
+      "tag": "0001_rare_meltdown",
+      "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1732309287122,
+      "tag": "0002_big_devos",
+      "breakpoints": true
     }
   ]
 }
