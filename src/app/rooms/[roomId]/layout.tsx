@@ -19,7 +19,9 @@ export default async function Home(
     <div className="flex flex-col h-screen bg-background">
       <header className="flex-shrink-0 p-4 border-b">
         <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Jux Chat Room</h1>
+          <Link href="/">
+            <h1 className="text-2xl font-bold">Jux Chat Room</h1>
+          </Link>
           <div className="flex items-center space-x-4">
             <SignedIn>
               <CreateChatRoom />

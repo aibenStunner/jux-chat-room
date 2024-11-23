@@ -1,11 +1,13 @@
 "use client";
 
-import { ScrollArea } from "./ui/scroll-area";
 import { trpc } from "../_trpc/client";
 import { LeaveRoomButton } from "./LeaveRoomButton";
 import { ChatMessage } from "./ChatMessage";
 import { AddMessageForm } from "./AddMessageForm";
 import React from "react";
+import { useLivePosts } from "../rooms/[roomId]/hooks";
+import { SubscriptionStatus } from "./SubscriptionStatus";
+import { Button } from "./ui/button";
 
 interface ChatRoomProps {
   roomId: string;
@@ -14,21 +16,42 @@ interface ChatRoomProps {
 
 export function ChatRoom({ roomId, userName }: ChatRoomProps) {
   const scrollRef = React.useRef<HTMLDivElement>(null);
+  const livePosts = useLivePosts(roomId, userName);
   const room = trpc.room.get.useQuery({ roomId });
-  const messages = trpc.message.list.useQuery({ roomId, userName });
 
   return (
     <div className="flex flex-col h-full">
       <div className="flex-shrink-0">
         <div className="p-4 border-b flex justify-between items-center">
-          <h2 className="text-xl font-semibold">{room.data?.name}</h2>
+          <div className="flex items-center space-x-4">
+            <h2 className="text-xl font-semibold">{room.data?.name}</h2>
+            <SubscriptionStatus subscription={livePosts.subscription} />
+          </div>
           <LeaveRoomButton roomId={roomId} userName={userName} />
         </div>
       </div>
-      <ScrollArea ref={scrollRef} className="flex-grow">
+      <div className="flex flex-1 flex-col-reverse overflow-y-scroll">
         <div className="p-4 space-y-6">
-          {messages?.data?.length &&
-            messages.data.map((message) => (
+          <div className="flex justify-center">
+            <Button
+              disabled={
+                !livePosts.query.hasNextPage ||
+                livePosts.query.isFetchingNextPage
+              }
+              onClick={() => {
+                void livePosts.query.fetchNextPage();
+              }}
+            >
+              {livePosts.query.isFetchingNextPage
+                ? "Loading..."
+                : !livePosts.query.hasNextPage
+                ? "Fetched everything!"
+                : "Load more"}
+            </Button>
+          </div>
+
+          {livePosts.messages.length &&
+            livePosts.messages.map((message) => (
               <ChatMessage
                 key={message.id}
                 message={message}
@@ -37,7 +60,7 @@ export function ChatRoom({ roomId, userName }: ChatRoomProps) {
               />
             ))}
         </div>
-      </ScrollArea>
+      </div>
       <div className="flex-shrink-0">
         <AddMessageForm
           roomId={roomId}

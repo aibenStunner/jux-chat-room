@@ -13,3 +13,5 @@ export function getInitials(str?: string) {
     .join("")
     .toUpperCase();
 }
+
+export const run = <TResult>(fn: () => TResult): TResult => fn();

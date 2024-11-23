@@ -14,7 +14,9 @@ export default async function Home() {
     <div className="min-h-screen bg-background">
       <header className="p-4 border-b">
         <div className="container mx-auto flex justify-between items-center">
-          <h1 className="text-2xl font-bold">Jux Chat Room</h1>
+          <Link href="/">
+            <h1 className="text-2xl font-bold">Jux Chat Room</h1>
+          </Link>
           <Button>
             <SignedOut>
               <Link href="/api/auth/signin">Sign In</Link>
