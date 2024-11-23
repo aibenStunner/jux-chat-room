@@ -81,7 +81,7 @@ export function useLivePosts(
   );
   const likeOrDislikeSubscription =
     trpc.message.onLikeOrDislike.useSubscription(
-      { roomId, userName },
+      { roomId },
       {
         onData(event) {
           addMessages([event.data]);
@@ -130,4 +130,38 @@ export function useThrottledIsTypingMutation(roomId: string) {
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [roomId]);
+}
+
+export function useWhoJoinedOrLeft(roomId: string) {
+  const [whoJoinedOrLeft, setWhoJoinedOrLeft] = React.useState<{
+    userName: string | null | undefined;
+    action: string;
+    roomId: string;
+  } | null>(null);
+
+  React.useEffect(() => {
+    if (whoJoinedOrLeft) {
+      const timer = setTimeout(() => {
+        setWhoJoinedOrLeft(null);
+      }, 5000);
+
+      return () => clearTimeout(timer);
+    }
+  }, [whoJoinedOrLeft]);
+
+  trpc.room.onJoinOrLeave.useSubscription(
+    {
+      roomId,
+    },
+    {
+      onData(event) {
+        setWhoJoinedOrLeft(event.data);
+      },
+      onError(err) {
+        console.error("Subscription error:", err);
+      },
+    }
+  );
+
+  return { whoJoinedOrLeft };
 }

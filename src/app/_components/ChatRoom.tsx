@@ -5,7 +5,7 @@ import { LeaveRoomButton } from "./LeaveRoomButton";
 import { ChatMessage } from "./ChatMessage";
 import { AddMessageForm } from "./AddMessageForm";
 import React from "react";
-import { useLivePosts } from "../rooms/[roomId]/hooks";
+import { useLivePosts, useWhoJoinedOrLeft } from "../rooms/[roomId]/hooks";
 import { SubscriptionStatus } from "./SubscriptionStatus";
 import { Button } from "./ui/button";
 import { listWithAnd, pluralize } from "./utils";
@@ -21,6 +21,7 @@ export function ChatRoom({ roomId, userName }: ChatRoomProps) {
   const currentlyTyping = trpc.room.whoIsTyping.useSubscription({
     roomId,
   });
+  const { whoJoinedOrLeft } = useWhoJoinedOrLeft(roomId);
   const room = trpc.room.get.useQuery({ roomId });
 
   return (
@@ -31,6 +32,12 @@ export function ChatRoom({ roomId, userName }: ChatRoomProps) {
             <h2 className="text-xl font-semibold">{room.data?.name}</h2>
             <SubscriptionStatus subscription={livePosts.messageSubscription} />
           </div>
+          {whoJoinedOrLeft && whoJoinedOrLeft.userName !== userName && (
+            <p className="text-sm text-blue-800">
+              <span className="italic">{whoJoinedOrLeft.userName}</span>{" "}
+              {whoJoinedOrLeft.action} the room
+            </p>
+          )}
           <LeaveRoomButton roomId={roomId} userName={userName} />
         </div>
       </div>

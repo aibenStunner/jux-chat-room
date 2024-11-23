@@ -1,6 +1,6 @@
 import { authedProcedure, publicProcedure } from "@/server/trpc";
 import RoomService from "./Service";
-import { TRPCRouterRecord } from "@trpc/server";
+import { TRPCRouterRecord, tracked } from "@trpc/server";
 
 import { z } from "zod";
 import { ee, WhoIsTyping } from "@/server/services/events";
@@ -41,7 +41,14 @@ export const roomRouter = {
       })
     )
     .mutation(async ({ input }) => {
-      return await roomService.joinRoom(input.roomId, input.userName);
+      await roomService.joinRoom(input.roomId, input.userName);
+
+      const whoToEmit = {
+        action: "joined",
+        userName: input.userName,
+        roomId: input.roomId,
+      };
+      ee.emit("joinOrLeave", whoToEmit);
     }),
   leave: authedProcedure
     .input(
@@ -51,7 +58,14 @@ export const roomRouter = {
       })
     )
     .mutation(async ({ input }) => {
-      return await roomService.leaveRoom(input.roomId, input.userName);
+      await roomService.leaveRoom(input.roomId, input.userName);
+
+      const whoToEmit = {
+        action: "left",
+        userName: input.userName,
+        roomId: input.roomId,
+      };
+      ee.emit("joinOrLeave", whoToEmit);
     }),
 
   isTyping: authedProcedure
@@ -107,6 +121,34 @@ export const roomRouter = {
         if (channelId === input.roomId) {
           yield* maybeYield(who);
         }
+      }
+    }),
+  onJoinOrLeave: authedProcedure
+    .input(
+      z.object({
+        roomId: z.string().uuid(),
+      })
+    )
+    .subscription(async function* (opts) {
+      const iterable = ee.toIterable("joinOrLeave", {
+        signal: opts.signal,
+      });
+
+      function* maybeYield(who: {
+        userName: string | null | undefined;
+        action: string;
+        roomId: string;
+      }) {
+        if (!who) return;
+        if (who.roomId !== opts.input.roomId) {
+          return;
+        }
+        yield tracked(who.roomId!, who);
+      }
+
+      // yield any who from the event emitter
+      for await (const [who] of iterable) {
+        yield* maybeYield(who);
       }
     }),
 } satisfies TRPCRouterRecord;

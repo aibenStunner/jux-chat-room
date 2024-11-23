@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { tracked } from "@trpc/server";
-import { authedProcedure, publicProcedure, router } from "@/server/trpc";
+import { authedProcedure, router } from "@/server/trpc";
 import MessageService from "./Service";
 import { ee, FetchedMessage } from "@/server/services/events";
 
@@ -184,11 +184,10 @@ export const messageRouter = router({
         yield* maybeYield(message);
       }
     }),
-  onLikeOrDislike: publicProcedure
+  onLikeOrDislike: authedProcedure
     .input(
       z.object({
         roomId: z.string().uuid(),
-        userName: z.string().optional().nullable(),
       })
     )
     .subscription(async function* (opts) {

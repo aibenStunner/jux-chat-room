@@ -19,6 +19,11 @@ export interface MyEvents {
   addLikeOrDislike: (data: Partial<FetchedMessage> | null) => void;
 
   isTypingUpdate: (roomId: string, who: WhoIsTyping) => void;
+  joinOrLeave: (who: {
+    userName: string | null | undefined;
+    action: string;
+    roomId: string;
+  }) => void;
 }
 
 declare interface MyEventEmitter {
