@@ -65,6 +65,13 @@ export const messageRouter = router({
         input.reactionType,
         input.userName
       );
+
+      const messageWithReactions =
+        await messageService.getMessageWithReactionsById(
+          input.messageId,
+          input.userName
+        );
+      ee.emit("addLikeOrDislike", messageWithReactions);
     }),
   undoLikeOrDislike: authedProcedure
     .input(
@@ -80,9 +87,15 @@ export const messageRouter = router({
         input.reactionType,
         input.userName
       );
+      const messageWithReactions =
+        await messageService.getMessageWithReactionsById(
+          input.messageId,
+          input.userName
+        );
+      ee.emit("addLikeOrDislike", messageWithReactions);
     }),
 
-  infinite: publicProcedure
+  infinite: authedProcedure
     .input(
       z.object({
         roomId: z.string().uuid(),
@@ -113,7 +126,7 @@ export const messageRouter = router({
         nextCursor,
       };
     }),
-  onAdd: publicProcedure
+  onAdd: authedProcedure
     .input(
       z.object({
         roomId: z.string().uuid(),
@@ -168,6 +181,33 @@ export const messageRouter = router({
 
       // yield any new messages from the event emitter
       for await (const [roomId, message] of iterable) {
+        yield* maybeYield(message);
+      }
+    }),
+  onLikeOrDislike: publicProcedure
+    .input(
+      z.object({
+        roomId: z.string().uuid(),
+        userName: z.string().optional().nullable(),
+      })
+    )
+    .subscription(async function* (opts) {
+      // We start by subscribing to the event emitter so that we don't miss any new events while fetching
+      const iterable = ee.toIterable("addLikeOrDislike", {
+        signal: opts.signal,
+      });
+
+      function* maybeYield(message: Partial<FetchedMessage> | null) {
+        if (!message) return;
+        if (message.roomId !== opts.input.roomId) {
+          // ignore posts from other channels - the event emitter can emit from other channels
+          return;
+        }
+        yield tracked(message.id!, message);
+      }
+
+      // yield any new messages from the event emitter
+      for await (const [message] of iterable) {
         yield* maybeYield(message);
       }
     }),

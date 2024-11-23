@@ -3,7 +3,7 @@ import { useLivePosts } from "../rooms/[roomId]/hooks";
 import { run } from "./utils";
 
 export function SubscriptionStatus(props: {
-  subscription: ReturnType<typeof useLivePosts>["subscription"];
+  subscription: ReturnType<typeof useLivePosts>["messageSubscription"];
 }) {
   const { subscription } = props;
   return (

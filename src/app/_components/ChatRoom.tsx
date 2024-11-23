@@ -25,7 +25,7 @@ export function ChatRoom({ roomId, userName }: ChatRoomProps) {
         <div className="p-4 border-b flex justify-between items-center">
           <div className="flex items-center space-x-4">
             <h2 className="text-xl font-semibold">{room.data?.name}</h2>
-            <SubscriptionStatus subscription={livePosts.subscription} />
+            <SubscriptionStatus subscription={livePosts.messageSubscription} />
           </div>
           <LeaveRoomButton roomId={roomId} userName={userName} />
         </div>

@@ -14,6 +14,7 @@ export interface FetchedMessage {
 
 export interface MyEvents {
   addMessage: (roomId: string, data: FetchedMessage) => void;
+  addLikeOrDislike: (data: Partial<FetchedMessage> | null) => void;
 }
 
 declare interface MyEventEmitter {

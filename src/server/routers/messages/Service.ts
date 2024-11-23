@@ -29,6 +29,36 @@ class MessageService {
     return messagesWithReactions;
   }
 
+  async getMessageWithReactionsById(
+    messageId: string,
+    userName?: string | null
+  ) {
+    if (!userName?.length) return null;
+
+    const [messageWithReactions] = await db
+      .select({
+        id: messagesTable.id,
+        roomId: messagesTable.roomId,
+        text: messagesTable.text,
+        userName: messagesTable.userName,
+        createdAt: messagesTable.createdAt,
+        likes: sql<number>`COUNT(CASE WHEN ${messageReactionsTable.reactionType} = 'like' THEN 1 END)`,
+        dislikes: sql<number>`COUNT(CASE WHEN ${messageReactionsTable.reactionType} = 'dislike' THEN 1 END)`,
+        userLiked: sql<boolean>`BOOL_OR(${messageReactionsTable.reactionType} = 'like' AND ${messageReactionsTable.userName} = ${userName})`,
+        userDisliked: sql<boolean>`BOOL_OR(${messageReactionsTable.reactionType} = 'dislike' AND ${messageReactionsTable.userName} = ${userName})`,
+      })
+      .from(messagesTable)
+      .leftJoin(
+        messageReactionsTable,
+        eq(messagesTable.id, messageReactionsTable.messageId)
+      )
+      .where(eq(messagesTable.id, messageId))
+      .groupBy(messagesTable.id)
+      .orderBy(asc(messagesTable.createdAt));
+
+    return messageWithReactions;
+  }
+
   async getById(messageId: string) {
     return db.query.messagesTable.findFirst({
       where: (fields, ops) => ops.eq(fields.id, messageId),
