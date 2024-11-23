@@ -5,6 +5,7 @@ import { Textarea } from "./ui/textarea";
 import React from "react";
 import { trpc } from "../_trpc/client";
 import { SendHorizonal } from "lucide-react";
+import { useThrottledIsTypingMutation } from "../rooms/[roomId]/hooks";
 
 export function AddMessageForm(props: {
   onMessagePost: () => void;
@@ -32,6 +33,13 @@ export function AddMessageForm(props: {
       },
     });
   }
+
+  const isTypingMutation = useThrottledIsTypingMutation(roomId);
+
+  React.useEffect(() => {
+    // update isTyping state
+    isTypingMutation(isFocused && message.trim().length > 0);
+  }, [isFocused, message, isTypingMutation]);
 
   return (
     <div className="relative">

@@ -8,6 +8,7 @@ import React from "react";
 import { useLivePosts } from "../rooms/[roomId]/hooks";
 import { SubscriptionStatus } from "./SubscriptionStatus";
 import { Button } from "./ui/button";
+import { listWithAnd, pluralize } from "./utils";
 
 interface ChatRoomProps {
   roomId: string;
@@ -17,6 +18,9 @@ interface ChatRoomProps {
 export function ChatRoom({ roomId, userName }: ChatRoomProps) {
   const scrollRef = React.useRef<HTMLDivElement>(null);
   const livePosts = useLivePosts(roomId, userName);
+  const currentlyTyping = trpc.room.whoIsTyping.useSubscription({
+    roomId,
+  });
   const room = trpc.room.get.useQuery({ roomId });
 
   return (
@@ -60,6 +64,18 @@ export function ChatRoom({ roomId, userName }: ChatRoomProps) {
           ))}
         </div>
       </div>
+      <p className="text-sm italic text-gray-500 mb-2 ml-5 mt-6">
+        {currentlyTyping.data?.length &&
+        !currentlyTyping.data.includes(userName) ? (
+          `${listWithAnd(currentlyTyping.data)} ${pluralize(
+            currentlyTyping.data.length,
+            "is",
+            "are"
+          )} typing...`
+        ) : (
+          <>&nbsp;</>
+        )}
+      </p>
       <div className="flex-shrink-0">
         <AddMessageForm
           roomId={roomId}

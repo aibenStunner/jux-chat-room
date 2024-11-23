@@ -12,9 +12,13 @@ export interface FetchedMessage {
   userDisliked: boolean | null;
 }
 
+export type WhoIsTyping = Record<string, { lastTyped: Date }>;
+
 export interface MyEvents {
   addMessage: (roomId: string, data: FetchedMessage) => void;
   addLikeOrDislike: (data: Partial<FetchedMessage> | null) => void;
+
+  isTypingUpdate: (roomId: string, who: WhoIsTyping) => void;
 }
 
 declare interface MyEventEmitter {
