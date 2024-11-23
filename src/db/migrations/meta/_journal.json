@@ -29,6 +29,13 @@
       "when": 1732314835161,
       "tag": "0003_confused_wendell_vaughn",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1732369234802,
+      "tag": "0004_hard_shocker",
+      "breakpoints": true
     }
   ]
 }

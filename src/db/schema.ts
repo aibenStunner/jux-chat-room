@@ -5,6 +5,7 @@ import {
   varchar,
   timestamp,
   text,
+  uniqueIndex,
 } from "drizzle-orm/pg-core";
 
 export const usersTable = pgTable("users", {
@@ -43,19 +44,25 @@ export const roomsTable = pgTable("rooms", {
 });
 export type RoomType = InferSelectModel<typeof roomsTable>;
 
-export const roomUsersTable = pgTable("roomUsers", {
-  roomId: text("roomId")
-    .notNull()
-    .references(() => roomsTable.id),
-  userId: integer("userId")
-    .notNull()
-    .references(() => usersTable.id),
-  joinedAt: timestamp("joinedAt", {
-    mode: "date",
-    precision: 3,
-    withTimezone: true,
+export const roomUsersTable = pgTable(
+  "roomUsers",
+  {
+    roomId: text("roomId")
+      .notNull()
+      .references(() => roomsTable.id),
+    userId: integer("userId")
+      .notNull()
+      .references(() => usersTable.id),
+    joinedAt: timestamp("joinedAt", {
+      mode: "date",
+      precision: 3,
+      withTimezone: true,
+    })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => ({
+    roomIdUserIdUniqueIndex: uniqueIndex().on(t.roomId, t.userId),
   })
-    .notNull()
-    .defaultNow(),
-});
+);
 export type RoomUserType = InferSelectModel<typeof roomUsersTable>;

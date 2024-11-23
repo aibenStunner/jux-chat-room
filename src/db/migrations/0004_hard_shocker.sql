@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX IF NOT EXISTS "roomUsers_roomId_userId_index" ON "roomUsers" USING btree ("roomId","userId");
