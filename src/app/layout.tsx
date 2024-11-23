@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
 import { TRPCProviders } from "./_trpc/Provider";
+import { SessionProvider } from "next-auth/react";
+import { auth } from "@/server/services/auth";
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -19,17 +21,20 @@ export const metadata: Metadata = {
   description: "Colaborative Activity Chat Room",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const session = await auth();
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <TRPCProviders>{children}</TRPCProviders>
+        <SessionProvider session={session}>
+          <TRPCProviders>{children}</TRPCProviders>
+        </SessionProvider>
       </body>
     </html>
   );

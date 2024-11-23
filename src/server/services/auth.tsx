@@ -1,5 +1,5 @@
 import { z } from "zod";
-import type { NextAuthConfig, Session } from "next-auth";
+import type { NextAuthConfig, Session, User } from "next-auth";
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { cache } from "react";
@@ -30,10 +30,10 @@ const authOptions: NextAuthConfig = {
 
         return {
           name,
-        };
+        } as User;
       },
       credentials: {
-        name: { type: "test" },
+        name: { type: "string", label: "Enter your name" },
       },
     }),
   ],

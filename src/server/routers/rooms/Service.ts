@@ -1,6 +1,7 @@
 import { db } from "@/db/client";
 import { eq, sql } from "drizzle-orm";
 import { roomsTable, roomUsersTable } from "@/db/schema";
+import UserService from "../users/Service";
 
 class RoomService {
   async get() {
@@ -16,13 +17,21 @@ class RoomService {
       .groupBy(roomsTable.id);
   }
 
-  async addChatRoom(name: string) {
+  async addChatRoom(name: string, userName: string) {
     const [room] = await db
       .insert(roomsTable)
       .values({
         name,
       })
       .returning();
+    const user = await new UserService().getUser(userName);
+
+    if (user) {
+      await db.insert(roomUsersTable).values({
+        userId: user.id,
+        roomId: room.id,
+      });
+    }
 
     return room.id;
   }

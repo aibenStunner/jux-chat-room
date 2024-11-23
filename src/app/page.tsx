@@ -1,10 +1,11 @@
 import Link from "next/link";
 
-import { ChatRoomCard } from "./_components/ChatRoomCard";
-import { Button } from "./_components/ui/button";
-
-import { SignedIn, SignedOut } from "@/server/services/auth";
 import { caller } from "@/server/routers/_app";
+import { SignedIn, SignedOut } from "@/server/services/auth";
+
+import { Button } from "./_components/ui/button";
+import { ChatRoomCard } from "./_components/ChatRoomCard";
+import { CreateChatRoom } from "./_components/CreateChatRoom";
 
 export default async function Home() {
   const rooms = await caller.room.list();
@@ -24,8 +25,14 @@ export default async function Home() {
           </Button>
         </div>
       </header>
+
       <main className="container mx-auto py-8 px-4">
-        <h2 className="text-xl font-semibold mb-6">Chat Rooms</h2>
+        <div className="flex justify-between items-center mb-6">
+          <h2 className="text-xl font-semibold">Chat Rooms</h2>
+          <SignedIn>
+            <CreateChatRoom />
+          </SignedIn>
+        </div>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {rooms.map((room) => (
             <ChatRoomCard key={room.id} room={room} />
