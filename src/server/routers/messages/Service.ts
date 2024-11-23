@@ -1,5 +1,5 @@
 import { db } from "@/db/client";
-import { eq, and, sql } from "drizzle-orm";
+import { eq, and, sql, asc } from "drizzle-orm";
 import { messageReactionsTable, messagesTable } from "@/db/schema";
 
 class MessageService {
@@ -23,7 +23,8 @@ class MessageService {
         eq(messagesTable.id, messageReactionsTable.messageId)
       )
       .where(eq(messagesTable.roomId, roomId))
-      .groupBy(messagesTable.id);
+      .groupBy(messagesTable.id)
+      .orderBy(asc(messagesTable.createdAt));
 
     return messagesWithReactions;
   }
