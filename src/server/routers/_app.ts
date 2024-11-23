@@ -6,12 +6,14 @@ import { auth } from "../services/auth";
 
 import { roomRouter } from "./rooms/router";
 import { userRouter } from "./users/router";
+import { messageRouter } from "./messages/router";
 
 export const appRouter = router({
   healthCheck: publicProcedure.query(() => "yay!"),
 
   room: roomRouter,
   user: userRouter,
+  message: messageRouter,
 });
 
 const createCallerContext = cache(

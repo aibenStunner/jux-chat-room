@@ -16,8 +16,8 @@ export default async function Home(
   const rooms = await caller.room.list();
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
-      <header className="p-4 border-b">
+    <div className="flex flex-col h-screen bg-background">
+      <header className="flex-shrink-0 p-4 border-b">
         <div className="container mx-auto flex justify-between items-center">
           <h1 className="text-2xl font-bold">Jux Chat Room</h1>
           <div className="flex items-center space-x-4">
@@ -42,7 +42,7 @@ export default async function Home(
           isLoggedIn={!!session?.user?.name}
           user={session?.user?.name}
         />
-        <main className="flex-1">{props.children}</main>
+        <main className="flex-1 overflow-hidden">{props.children}</main>
       </div>
     </div>
   );

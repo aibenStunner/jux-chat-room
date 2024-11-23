@@ -20,9 +20,9 @@ export function ChatRoomSidebar({
   user,
 }: ChatRoomSidebarProps) {
   return (
-    <div className="w-64 border-r bg-gray-100 p-4">
+    <div className="flex flex-col h-full w-64 border-r bg-gray-100 p-4">
       <h2 className="text-lg font-semibold mb-4">Available Rooms</h2>
-      <ScrollArea className="h-[calc(100vh-8rem)]">
+      <ScrollArea className="h-[calc(100vh-8rem)] flex-grow">
         {rooms.map((room) => (
           <div key={room.id} className="mb-2">
             <Link href={`/rooms/${room.id}`}>
@@ -39,7 +39,7 @@ export function ChatRoomSidebar({
       </ScrollArea>
 
       {isLoggedIn && !!user && (
-        <div className="absolute bottom-0 w-64 left-0 p-4 bg-gray-200 text-center">
+        <div className="flex-shrink-0 absolute bottom-0 w-64 left-0 p-4 bg-gray-200 text-center">
           Hello, {user} 👋
         </div>
       )}

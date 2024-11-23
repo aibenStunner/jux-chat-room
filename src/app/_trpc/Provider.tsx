@@ -49,7 +49,7 @@ export function TRPCProviders(props: Readonly<{ children: React.ReactNode }>) {
       <trpc.Provider client={trpcClient} queryClient={queryClient}>
         {props.children}
       </trpc.Provider>
-      <ReactQueryDevtools initialIsOpen={false} />
+      <ReactQueryDevtools initialIsOpen={false} buttonPosition="top-right" />
     </QueryClientProvider>
   );
 }

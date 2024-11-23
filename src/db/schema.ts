@@ -6,6 +6,7 @@ import {
   timestamp,
   text,
   uniqueIndex,
+  customType,
 } from "drizzle-orm/pg-core";
 
 export const usersTable = pgTable("users", {
@@ -66,3 +67,68 @@ export const roomUsersTable = pgTable(
   })
 );
 export type RoomUserType = InferSelectModel<typeof roomUsersTable>;
+
+export const messagesTable = pgTable("messages", {
+  id: text("id")
+    .primaryKey()
+    .$defaultFn(() => crypto.randomUUID()),
+  roomId: text("roomId")
+    .notNull()
+    .references(() => roomsTable.id),
+
+  userName: text("userName")
+    .notNull()
+    .references(() => usersTable.name),
+  text: text("text").notNull(),
+
+  createdAt: timestamp("createdAt", {
+    mode: "date",
+    precision: 3,
+    withTimezone: true,
+  })
+    .notNull()
+    .defaultNow(),
+  updatedAt: timestamp("updatedAt", {
+    mode: "date",
+    precision: 3,
+    withTimezone: true,
+  })
+    .notNull()
+    .defaultNow()
+    .$onUpdateFn(() => new Date()),
+});
+export type MessageType = InferSelectModel<typeof messagesTable>;
+
+const customColumnReactionType = customType<{ data: "like" | "dislike" }>({
+  dataType() {
+    return "text";
+  },
+});
+export const messageReactionsTable = pgTable(
+  "messageReactions",
+  {
+    id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
+    messageId: text("messageId")
+      .notNull()
+      .references(() => messagesTable.id),
+    userName: text("userName")
+      .notNull()
+      .references(() => usersTable.name),
+    reactionType: customColumnReactionType("reactionType").notNull(),
+    createdAt: timestamp("createdAt", {
+      mode: "date",
+      precision: 3,
+      withTimezone: true,
+    }),
+  },
+  (t) => ({
+    messageIdUserIdReactionTypeUniqueIndex: uniqueIndex().on(
+      t.messageId,
+      t.userName,
+      t.reactionType
+    ),
+  })
+);
+export type MessageReactionType = InferSelectModel<
+  typeof messageReactionsTable
+>;

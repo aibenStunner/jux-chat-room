@@ -36,6 +36,13 @@
       "when": 1732369234802,
       "tag": "0004_hard_shocker",
       "breakpoints": true
+    },
+    {
+      "idx": 5,
+      "version": "7",
+      "when": 1732381379729,
+      "tag": "0005_breezy_khan",
+      "breakpoints": true
     }
   ]
 }
