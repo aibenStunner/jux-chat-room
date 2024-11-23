@@ -4,8 +4,12 @@ import type { Context } from "../context";
 import { publicProcedure, router } from "../trpc";
 import { auth } from "../services/auth";
 
+import { roomRouter } from "./rooms/router";
+
 export const appRouter = router({
   healthCheck: publicProcedure.query(() => "yay!"),
+
+  room: roomRouter,
 });
 
 const createCallerContext = cache(

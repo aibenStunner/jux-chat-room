@@ -1,4 +1,4 @@
-import { initTRPC } from "@trpc/server";
+import { initTRPC, TRPCError } from "@trpc/server";
 import superjson from "superjson";
 import type { Context } from "./context";
 
@@ -22,8 +22,17 @@ const t = initTRPC.context<Context>().create({
 export const publicProcedure = t.procedure;
 
 export const authedProcedure = publicProcedure.use(function isAuthed(opts) {
+  const user = opts.ctx.session?.user;
+
+  if (!user?.name) throw new TRPCError({ code: "UNAUTHORIZED" });
+
   return opts.next({
-    ctx: "authed context",
+    ctx: {
+      user: {
+        ...user,
+        name: user.name,
+      },
+    },
   });
 });
 

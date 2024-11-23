@@ -1,8 +1,12 @@
 import { Card, CardContent, CardHeader, CardTitle } from "./ui/card";
-import { ChatRoom } from "../_data/defaultChatRooms";
 import Link from "next/link";
+import { RoomType } from "@/db/schema";
 
-export function ChatRoomCard({ room }: { room: ChatRoom }) {
+export function ChatRoomCard({
+  room,
+}: {
+  room: Partial<RoomType> & { userCount: number };
+}) {
   return (
     <Link href={`/rooms/${room.id}`}>
       <Card className="hover:shadow-md transition-shadow">
@@ -14,7 +18,7 @@ export function ChatRoomCard({ room }: { room: ChatRoom }) {
             Users: {room.userCount}
           </p>
           <p className="text-sm text-muted-foreground">
-            Created: {new Date(room.createdAt).toLocaleDateString()}
+            Created: {new Date(room.createdAt!).toLocaleDateString()}
           </p>
         </CardContent>
       </Card>
