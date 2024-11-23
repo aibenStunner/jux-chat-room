@@ -50,15 +50,14 @@ export function ChatRoom({ roomId, userName }: ChatRoomProps) {
             </Button>
           </div>
 
-          {livePosts.messages.length &&
-            livePosts.messages.map((message) => (
-              <ChatMessage
-                key={message.id}
-                message={message}
-                userName={userName}
-                isMe={userName === message.userName}
-              />
-            ))}
+          {livePosts.messages.map((message) => (
+            <ChatMessage
+              key={message.id}
+              message={message}
+              userName={userName}
+              isMe={userName === message.userName}
+            />
+          ))}
         </div>
       </div>
       <div className="flex-shrink-0">
