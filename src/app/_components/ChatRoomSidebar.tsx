@@ -24,7 +24,7 @@ export function ChatRoomSidebar({
       <div className="flex flex-1 flex-col overflow-y-scroll h-[calc(100vh-8rem)] no-scrollbar">
         {rooms.map((room) => (
           <div key={room.id} className="mb-2">
-            <Link href={`/rooms/${room.id}`}>
+            <Link key={room.id} href={`/rooms/${room.id}`}>
               <Button
                 variant={roomId === room.id ? "secondary" : "outline"}
                 className="w-full justify-start"
