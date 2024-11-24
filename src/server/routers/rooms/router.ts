@@ -69,7 +69,7 @@ export const roomRouter = {
     }),
 
   isTyping: authedProcedure
-    .input(z.object({ roomId: z.string().uuid(), typing: z.boolean() }))
+    .input(z.object({ roomId: z.string(), typing: z.boolean() }))
     .mutation(async ({ ctx, input }) => {
       const { name } = ctx.user;
       const { roomId } = input;
@@ -90,7 +90,7 @@ export const roomRouter = {
   whoIsTyping: authedProcedure
     .input(
       z.object({
-        roomId: z.string().uuid(),
+        roomId: z.string(),
       })
     )
     .subscription(async function* ({ input, signal }) {
@@ -126,7 +126,7 @@ export const roomRouter = {
   onJoinOrLeave: authedProcedure
     .input(
       z.object({
-        roomId: z.string().uuid(),
+        roomId: z.string(),
       })
     )
     .subscription(async function* (opts) {

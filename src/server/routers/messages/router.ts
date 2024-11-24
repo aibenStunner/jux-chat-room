@@ -10,7 +10,7 @@ export const messageRouter = router({
   list: authedProcedure
     .input(
       z.object({
-        roomId: z.string().uuid(),
+        roomId: z.string(),
         userName: z.string().optional().nullable(),
       })
     )
@@ -21,7 +21,7 @@ export const messageRouter = router({
     .input(
       z.object({
         id: z.string().uuid().optional(),
-        roomId: z.string().uuid(),
+        roomId: z.string(),
         text: z.string().trim().min(1),
       })
     )
@@ -98,7 +98,7 @@ export const messageRouter = router({
   infinite: authedProcedure
     .input(
       z.object({
-        roomId: z.string().uuid(),
+        roomId: z.string(),
         userName: z.string().optional().nullable(),
         cursor: z.date().nullish(),
         take: z.number().min(1).max(50).nullish(),
@@ -129,7 +129,7 @@ export const messageRouter = router({
   onAdd: authedProcedure
     .input(
       z.object({
-        roomId: z.string().uuid(),
+        roomId: z.string(),
         userName: z.string().optional().nullable(),
         // lastEventId is the last event id that the client has received
         // On the first call, it will be whatever was passed in the initial setup
@@ -187,7 +187,7 @@ export const messageRouter = router({
   onLikeOrDislike: authedProcedure
     .input(
       z.object({
-        roomId: z.string().uuid(),
+        roomId: z.string(),
       })
     )
     .subscription(async function* (opts) {
