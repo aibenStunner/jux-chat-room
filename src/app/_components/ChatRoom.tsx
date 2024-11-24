@@ -83,7 +83,7 @@ export function ChatRoom({ roomId, userName }: ChatRoomProps) {
           <>&nbsp;</>
         )}
       </p>
-      <div className="flex-shrink-0">
+      <div className="flex-shrink-0 border-t bg-white p-2">
         <AddMessageForm
           roomId={roomId}
           onMessagePost={() => {
