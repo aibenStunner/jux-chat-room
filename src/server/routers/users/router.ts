@@ -8,6 +8,17 @@ import UserService from "./Service";
 const userService = new UserService();
 
 export const userRouter = {
+  signIn: publicProcedure
+    .input(
+      z.object({
+        name: z.string(),
+      })
+    )
+    .mutation(async ({ input }) => {
+      const [user] = await userService.addUser(input.name);
+
+      return user;
+    }),
   hasJoinedRoom: publicProcedure
     .input(
       z.object({
