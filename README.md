@@ -16,7 +16,8 @@ A real-time chat room application where users can send messages and react to mes
 ```sh
 git clone git@github.com:aibenStunner/jux-chat-room.git && cd jux-chat-room
 pnpm i
-cp .env.example .env
+cp .env.example .env   # set db user, db password, db table
+pnpm migrate
 pnpm seed # seed database with chat rooms
 pnpm dev
 ```
