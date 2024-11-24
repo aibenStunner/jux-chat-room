@@ -26,7 +26,7 @@ export default async function Home(
         <ChatRoom roomId={roomId} userName={session?.user?.name} />
       ) : (
         <div className="h-full flex items-center justify-center">
-          <p className="text-xl text-gray-500">
+          <div className="text-xl text-gray-500">
             <SignedOut>Please sign in to view messages in chat room</SignedOut>
             {!!roomId ? (
               !joinedRoom && (
@@ -43,7 +43,7 @@ export default async function Home(
             ) : (
               <SignedIn>Select a room to start chatting</SignedIn>
             )}
-          </p>
+          </div>
         </div>
       )}
     </Suspense>
