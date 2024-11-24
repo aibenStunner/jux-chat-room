@@ -59,7 +59,7 @@ export const messageRouter = router({
         reactionType: z.enum(["like", "dislike"]),
       })
     )
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input }) => {
       await messageService.likeOrDislike(
         input.messageId,
         input.reactionType,
@@ -81,7 +81,7 @@ export const messageRouter = router({
         reactionType: z.enum(["like", "dislike"]),
       })
     )
-    .mutation(async ({ input, ctx }) => {
+    .mutation(async ({ input }) => {
       await messageService.undoLikeOrDislike(
         input.messageId,
         input.reactionType,
@@ -114,7 +114,7 @@ export const messageRouter = router({
         cursor,
         input.userName
       );
-      const items = page?.reverse()!;
+      const items = page.reverse();
       let nextCursor: typeof cursor | null = null;
       if (items.length > take) {
         const prev = items.shift();
@@ -180,7 +180,7 @@ export const messageRouter = router({
       }
 
       // yield any new messages from the event emitter
-      for await (const [roomId, message] of iterable) {
+      for await (const [, message] of iterable) {
         yield* maybeYield(message);
       }
     }),

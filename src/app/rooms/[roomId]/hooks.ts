@@ -112,7 +112,7 @@ export function useThrottledIsTypingMutation(roomId: string) {
     let state = false;
     let timeout: ReturnType<typeof setTimeout> | null;
     function trigger() {
-      timeout && clearTimeout(timeout);
+      if (timeout) clearTimeout(timeout);
       timeout = null;
 
       isTyping.mutate({ typing: state, roomId });

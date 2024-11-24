@@ -104,7 +104,7 @@ class MessageService {
     cursor?: Date | null,
     userName?: string | null
   ) {
-    if (!userName?.length) return;
+    if (!userName?.length) return [];
     return await db
       .select({
         id: messagesTable.id,
