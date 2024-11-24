@@ -62,6 +62,7 @@ export function useLivePosts(
     // Changing this value will trigger a new subscription
     setLastEventId(messages.at(-1)?.id ?? null);
   }
+
   const messageSubscription = trpc.message.onAdd.useSubscription(
     lastEventId === false ? skipToken : { roomId, lastEventId, userName },
     {

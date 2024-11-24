@@ -155,7 +155,8 @@ export const messageRouter = router({
       const newPostsSinceLastMessage =
         await messageService.getNewMessagesSinceTargetDate(
           opts.input.roomId,
-          lastMessageCreatedAt
+          lastMessageCreatedAt,
+          opts.input.userName
         );
 
       function* maybeYield(message: FetchedMessage) {
