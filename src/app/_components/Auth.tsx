@@ -32,9 +32,7 @@ export function AuthButton() {
             setCurrentUser(user);
 
             // set cookie to be accessed by trpc server client
-            document.cookie = `user=${encodeURIComponent(
-              JSON.stringify(user)
-            )}; path=/;`;
+            document.cookie = `user=${JSON.stringify(user)}; path=/;`;
           },
           onError(error) {
             alert(error.message);
@@ -48,6 +46,9 @@ export function AuthButton() {
   const handleSignOut = () => {
     setName("");
     setCurrentUser({});
+
+    // set cookie
+    document.cookie = "user=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT;";
     setDialogOpen(false);
   };
 

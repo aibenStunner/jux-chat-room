@@ -1,5 +1,5 @@
 import { create, StateCreator } from "zustand";
-import { devtools } from "zustand/middleware";
+import { devtools, persist, createJSONStorage } from "zustand/middleware";
 
 export interface User {
   id?: number;
@@ -25,7 +25,20 @@ const createUserSlice: StateCreator<
 });
 
 export const useStore = create<State>()(
-  devtools((...args) => ({
-    ...createUserSlice(...args),
-  }))
+  devtools(
+    persist(
+      (...args) => ({
+        ...createUserSlice(...args),
+      }),
+      {
+        name: "currentUser",
+        storage: createJSONStorage(() => sessionStorage),
+
+        merge: (persistedState, currentState) => ({
+          ...currentState,
+          ...(persistedState as UserSlice),
+        }),
+      }
+    )
+  )
 );
