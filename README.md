@@ -2,7 +2,7 @@
 
 A real-time chat room application where users can send messages and react to messages.
 
-## Features
+## Technical Stack
 
 - Full-Stack React with Next.js
 - Database with [Drizzle](https://orm.drizzle.team/) (Postgres)
@@ -21,3 +21,19 @@ pnpm migrate
 pnpm seed # seed database with chat rooms
 pnpm dev
 ```
+
+## Features implemented
+
+- Authentication with [next-auth](https://next-auth.js.org/)
+- User persistence in database
+- Seed database with 5 chatrooms
+- List all available chatrooms with name, current user count, creation timestamp
+- Join or Leave chatroom
+- Users can send messages to multiple chatrooms
+- Users can view messages in all chatrooms they have joined.
+- Like and dislike reactions
+- More than one user can react to a message
+- Reaction count
+- User left room
+- User joined room
+- User is typing
